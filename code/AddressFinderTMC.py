@@ -1,5 +1,3 @@
-
-#COMMENT FOR TUTORIAL
 import pandas as pd
 import matplotlib.pyplot as plt
 import folium
@@ -41,45 +39,46 @@ if xlsx_files:
 
 #CSV MAPPING
 df1 = pd.DataFrame(columns=['Street 1', 'Street 2', 'Address', 'Int_ID', 'Collection_Date','Latitude','Longitude','PH NB Left Volume', 'PH NB Through Volume', 'PH NB Right Volume','PH SB Left Volume', 'PH SB Through Volume', 'PH SB Right Volume','PH EB Left Volume', 'PH EB Through Volume', 'PH EB Right Volume','PH WB Left Volume', 'PH WB Through Volume', 'PH WB Right Volume', 'PH S Pedestrians','PH N Pedestrians','PH W Pedestrians','PH E Pedestrians','PH NB Left Micromobility', 'PH NB Through Micromobility', 'PH NB Right Micromobility','PH SB Left Micromobility', 'PH SB Through Micromobility', 'PH SB Right Micromobility','PH EB Left Micromobility', 'PH EB Through Micromobility', 'PH EB Right Micromobility','PH WB Left Micromobility', 'PH WB Through Micromobility', 'PH WB Right Micromobility'])
-df1.loc[0,'Street 1']=df_raw_csv.iloc[2,1]
-df1.loc[0,'Street 2']=df_raw_csv.iloc[2,2]
-df1.loc[0,'Address']= df1.loc[0,'Street 1'].split('-')[1] + " and "+df1.loc[0,'Street 2']+", Washington DC"
-df1.loc[0,'Int_ID']='N/A'
-df1.loc[0,'Collection_Date']=df_raw_xlsx.iloc[0,2]
-df1.loc[0,'Latitude']=df_raw_csv.iloc[8,1]
-df1.loc[0,'Longitude']=df_raw_csv.iloc[8,2]
-df1.iloc[0,7:19]=df_raw_csv.iloc[17,1:13]
-df1.iloc[0,19:23]=df_raw_csv.iloc[26,1:5]
-df1.iloc[0,23:35]=df_raw_csv.iloc[30,1:13]
-
-
+for i,key in enumerate(csv_dataframes):
+    df_raw_csv=csv_dataframes[key]
+    df1.loc[i,'Street 1']=df_raw_csv.iloc[2,1].split('-')[1].title()
+    df1.loc[i,'Street 2']=df_raw_csv.iloc[2,2].title()
+    df1.loc[i,'Address']= df1.loc[i,'Street 1'] + " and "+df1.loc[i,'Street 2']+", Washington DC"
+    df1.loc[i,'Int_ID']=df_raw_csv.iloc[2,1].split('-')[0]
+    df1.loc[i,'Collection_Date']=df_raw_xlsx.iloc[0,2]
+    df1.loc[i,'Latitude']=df_raw_csv.iloc[8,1]
+    df1.loc[i,'Longitude']=df_raw_csv.iloc[8,2]
+    df1.iloc[i,7:19]=df_raw_csv.iloc[17,1:13]
+    df1.iloc[i,19:23]=df_raw_csv.iloc[26,1:5]
+    df1.iloc[i,23:35]=df_raw_csv.iloc[30,1:13]
+    
 df2 = pd.DataFrame(columns=['Street 1', 'Street 2','Address', 'Int_ID', 'Collection_Date','Latitude','Longitude','PH NB Left Volume', 'PH NB Through Volume', 'PH NB Right Volume','PH SB Left Volume', 'PH SB Through Volume', 'PH SB Right Volume','PH EB Left Volume', 'PH EB Through Volume', 'PH EB Right Volume','PH WB Left Volume', 'PH WB Through Volume', 'PH WB Right Volume', 'PH S Pedestrians','PH N Pedestrians','PH W Pedestrians','PH E Pedestrians','PH NB Left Micromobility', 'PH NB Through Micromobility', 'PH NB Right Micromobility','PH SB Left Micromobility', 'PH SB Through Micromobility', 'PH SB Right Micromobility','PH EB Left Micromobility', 'PH EB Through Micromobility', 'PH EB Right Micromobility','PH WB Left Micromobility', 'PH WB Through Micromobility', 'PH WB Right Micromobility'])
-df2.loc[0,'Street 1']=df_raw_xlsx.iloc[7,1]
-df2.loc[0,'Street 2']=df_raw_xlsx.iloc[7,5]
-df2.loc[0,'Int_ID']=df_raw_csv.iloc[4,1]
-df2.loc[0,'Collection_Date']=df_raw_csv.iloc[6,1]
-df2.loc[0, 'Address']=df2.loc[0,'Street 1'].split('\n')[0]+' and '+df2.loc[0,'Street 2'].split('\n')[0]+', Washington DC'
-#APPLY PREV LOGIC
-response=geocoder.forward(df2.loc[0, 'Address'],limit=1,country=['us'])
-result=response.geojson()
-features=result['features']
-coords=features[0]['geometry']['coordinates']
-df2.loc[0,'Longitude']=coords[0]
-df2.loc[0,'Latitude']=coords[1]
-#df2.loc[0,'Latitude']=df_raw_csv.iloc[8,1]
-#df2.loc[0,'Longitude']=df_raw_csv.iloc[8,2]
-df2.iloc[0,7:10]=df_raw_xlsx.iloc[33,9:12]
-df2.iloc[0,10:13]=df_raw_xlsx.iloc[33,1:4]
-df2.iloc[0,13:16]=df_raw_xlsx.iloc[33,13:16]
-df2.iloc[0,16:19]=df_raw_xlsx.iloc[33,5:8]
-df2.iloc[0,19]=df_raw_xlsx.iloc[33,12]
-df2.iloc[0,20]=df_raw_xlsx.iloc[33,4]
-df2.iloc[0,21]=df_raw_xlsx.iloc[33,16]
-df2.iloc[0,22]=df_raw_xlsx.iloc[33,8]
-df2.iloc[0,23:26]=df_raw_xlsx.iloc[34,9:12]
-df2.iloc[0,26:29]=df_raw_xlsx.iloc[34,1:4]
-df2.iloc[0,29:32]=df_raw_xlsx.iloc[34,13:16]
-df2.iloc[0,32:35]=df_raw_xlsx.iloc[34,5:8]
+
+for i,key in enumerate(xlsx_dataframes):
+    df_raw_xlsx=xlsx_dataframes[key]
+    df2.loc[i,'Street 1']=df_raw_xlsx.iloc[7,1].split('\n')[0]
+    df2.loc[i,'Street 2']=df_raw_xlsx.iloc[7,5].split('\n')[0]
+    df2.loc[i,'Int_ID']=df_raw_csv.iloc[4,1]
+    df2.loc[i,'Collection_Date']=df_raw_csv.iloc[6,1]
+    df2.loc[i, 'Address']=df2.loc[i,'Street 1']+' and '+df2.loc[i,'Street 2']+', Washington DC'
+    response=geocoder.forward(df2.loc[i, 'Address'],limit=1,country=['us'])
+    result=response.geojson()
+    features=result['features']
+    coords=features[0]['geometry']['coordinates']
+    df2.loc[i,'Longitude']=coords[0]
+    df2.loc[i,'Latitude']=coords[1]
+    df2.iloc[i,7:10]=df_raw_xlsx.iloc[33,9:12]
+    df2.iloc[i,10:13]=df_raw_xlsx.iloc[33,1:4]
+    df2.iloc[i,13:16]=df_raw_xlsx.iloc[33,13:16]
+    df2.iloc[i,16:19]=df_raw_xlsx.iloc[33,5:8]
+    df2.iloc[i,19]=df_raw_xlsx.iloc[33,12]
+    df2.iloc[i,20]=df_raw_xlsx.iloc[33,4]
+    df2.iloc[i,21]=df_raw_xlsx.iloc[33,16]
+    df2.iloc[i,22]=df_raw_xlsx.iloc[33,8]
+    df2.iloc[i,23:26]=df_raw_xlsx.iloc[34,9:12]
+    df2.iloc[i,26:29]=df_raw_xlsx.iloc[34,1:4]
+    df2.iloc[i,29:32]=df_raw_xlsx.iloc[34,13:16]
+    df2.iloc[i,32:35]=df_raw_xlsx.iloc[34,5:8]
 
 df=pd.concat([df1,df2],ignore_index=True)
 
